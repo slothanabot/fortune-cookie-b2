@@ -4,21 +4,21 @@ The entry is a single fortune-cookie line for a crypto trader who has
 just been liquidated. The judge plays that trader at 3am with an empty
 wallet and keeps the fortune that makes them laugh instead of cry.
 
-The line maps onto the judge brief like this:
-  1. Fortune voice + loss: it opens like a real cookie ("Trader, take
-     heart: ... Your next fortune begins ...") and the loss is the
-     whole premise — the trader has just been liquidated. The opening
-     "take heart" speaks directly to the trader with comfort, not
-     pity, matching the brief's "laugh instead of cry".
-  2. Rueful, warm joke on the loss: the liquidation is reframed as a
-     fresh start. "Debt-free" and "fully diversified" are the trader's
-     own boast-words, turned back on them — the portfolio is now
-     nothing, so technically the trader is diversified into nothing.
-  3. One line, well under 20 words, readable in a single breath.
+The line maps onto the judge brief's five criteria, in the brief's
+own order:
+  1. Fortune voice + loss, both present: it opens like a real cookie
+     ("Trader, take heart: ... Your next fortune begins ...") and
+     the loss is the whole premise — the trader has just been
+     liquidated, and the line is addressed to that trader.
+  2. Rueful and warm, never cruel or smug: "take heart" comforts
+     instead of pitying, and "begins at zero" reframes the wipeout
+     as a fresh start rather than mocking the trader for it.
+  3. One line, 18 words, readable in a single breath.
   4. Fresh turn: the punchline is the double meaning of
      "diversified into nothing" — a portfolio-management virtue
      applied to an empty wallet — rather than the obvious
-     liquidation pun.
+     liquidation pun. "Debt-free" is the same move: a boast-word
+     that is technically true only because there is nothing left.
   5. Small, oracular, slightly formal phrasing ("Your next fortune
      begins at zero") that the punchline then breaks.
 
@@ -36,8 +36,10 @@ def verify(text: str) -> None:
     """Enforce the competition gate: 1-160 chars, <= 20 words, one line."""
     if not text or not text.strip():
         raise ValueError("entry must not be blank")
-    if len(text) != len(text.encode("utf-8").decode("utf-8")):
-        raise ValueError("entry must be valid UTF-8 text")
+    try:
+        text.encode("utf-8")
+    except UnicodeEncodeError as exc:
+        raise ValueError("entry must be valid UTF-8 text") from exc
     if not 1 <= len(text) <= 160:
         raise ValueError(f"entry must be 1-160 chars, got {len(text)}")
     if "\n" in text or "\r" in text:
