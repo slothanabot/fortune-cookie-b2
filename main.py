@@ -5,12 +5,14 @@ Writes one line to $MAKEFUN_OUTPUT_DIR/entry.txt,
 or /output/entry.txt when the variable is unset.
 Gate: UTF-8 text, 1-120 characters, not only whitespace, one line.
 
-The joke: A fortune-cookie prophecy in the engineer's world: the bug, the typo, the inevitability. Short declarative sentences like a real fortune, with the funniest word — tomorrow — sitting at the end.
+The joke: a fortune-cookie prophecy in the engineer's world: the bug,
+the typo, the inevitability. Short declarative sentences like a real
+fortune, with the funniest word — tomorrow — sitting at the end.
 """
 
 import os
 
-LINE = 'You will fix the bug today. It was a typo. It was always a typo. It will be a typo again tomorrow.'
+LINE = "You will fix the bug today. It was a typo. It was always a typo. It will be a typo again tomorrow."
 
 
 def build_line() -> str:
@@ -18,6 +20,8 @@ def build_line() -> str:
     line = LINE.strip()
     if not line or "\n" in line or "\r" in line:
         raise SystemExit("entry must be one non-empty line")
+    if any(ord(ch) < 32 for ch in line):
+        raise SystemExit("entry must not contain control characters")
     if not 1 <= len(line) <= 120:
         raise SystemExit(f"entry is {len(line)} chars, must be 1-120")
     return line
