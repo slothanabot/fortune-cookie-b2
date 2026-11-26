@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Fortune Cookie Funnies for Engineers (account B).
 
-Writes one line to $MAKEFUN_OUTPUT_DIR/entry.txt,
-or /output/entry.txt when the variable is unset.
-Gate: UTF-8 text, 1-120 characters, not only whitespace, one line.
+Stores one line in $MAKEFUN_OUTPUT_DIR/entry.txt,
+or in /output/entry.txt when that variable is missing.
+The line must be UTF-8, one line only, 1-120 characters,
+never blank, and free of control characters.
 
-The joke: a fortune-cookie prophecy in the engineer's world: the bug,
-the typo, the inevitability. Short declarative sentences like a real
-fortune, with the funniest word — tomorrow — sitting at the end.
+The bit: a fortune-cookie prophecy from the engineer's world — the bug,
+the typo, the inevitability. Short flat sentences, the way a real
+fortune reads, with the funniest word — tomorrow — saved for last.
 """
 
 import os
@@ -15,15 +16,20 @@ import os
 LINE = "You will fix the bug today. It was a typo. It was always a typo. It will be a typo again tomorrow."
 
 
+def fail(message: str) -> None:
+    """Stop the run with a short explanation of what went wrong."""
+    raise SystemExit(message)
+
+
 def build_line() -> str:
     """Return the line, validated as a single in-range line."""
     line = LINE.strip()
     if not line or "\n" in line or "\r" in line:
-        raise SystemExit("entry must be one non-empty line")
+        fail("entry must be one non-empty line")
     if any(ord(ch) < 32 for ch in line):
-        raise SystemExit("entry must not contain control characters")
+        fail("entry must not contain control characters")
     if not 1 <= len(line) <= 120:
-        raise SystemExit(f"entry is {len(line)} chars, must be 1-120")
+        fail(f"entry is {len(line)} chars, must be 1-120")
     return line
 
 
